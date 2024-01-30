@@ -1,0 +1,111 @@
+// Forms and buttons are from react bootstrap
+import { Button, Form } from "react-bootstrap";
+import Rating from "./Rating";
+import { CartState } from "../context/Context";
+import { type } from "@testing-library/user-event/dist/type";
+
+const Filters = () => {
+	// Rating states
+	// const [rate, setRate] = useState(2);
+
+	const {
+		productState: { byStock, byFastDelivery, sort, byRating },
+		productDispatch,
+	} = CartState();
+
+	console.log(byStock, byFastDelivery, sort, byRating);
+
+	// console.log(productState); // Original state of product filters
+
+	return (
+		<div className="filters">
+			<span className="title">Filter Products</span>
+			<span>
+				<Form.Check
+					inline
+					label="Ascending"
+					name="group1"
+					type="radio"
+					id={`inline-1`}
+					onChange={() =>
+						productDispatch({
+							type: "SORT_BY_PRICE",
+							payload: "lowToHigh",
+						})
+					}
+					checked={sort === "lowToHigh" ? true : false}
+				/>
+			</span>
+			<span>
+				{/* Form checks, both radio buttons or checkboxes; All from React-Bootstrap */}
+				<Form.Check
+					inline
+					label="Descending"
+					name="group1"
+					type="radio"
+					id={`inline-2`}
+					onChange={() =>
+						productDispatch({
+							type: "SORT_BY_PRICE",
+							payload: "highToLow",
+						})
+					}
+					checked={sort === "highToLow" ? true : false}
+				/>
+			</span>
+			<span>
+				<Form.Check
+					inline
+					label="Include Out of Stock"
+					name="group1"
+					type="checkbox"
+					id={`inline-3`}
+					onChange={() =>
+						productDispatch({
+							type: "FILTER_BY_STOCK",
+						})
+					}
+					checked={byStock}
+				/>
+			</span>
+			<span>
+				<Form.Check
+					inline
+					label="Fast Delivery Only"
+					name="group1"
+					type="checkbox"
+					id={`inline-4`}
+					onChange={() =>
+						productDispatch({
+							type: "FILTER_BY_DELIVERY",
+						})
+					}
+					checked={byFastDelivery}
+				/>
+			</span>
+			<span>
+				<label style={{ paddingRight: 10 }}>Rating: </label>
+				{/* Onclick and states actions for rating */}
+				<Rating
+					rating={byRating}
+					onClick={(i) =>
+						productDispatch({ type: "FILTER_BY_RATING", payload: i + 1 })
+					}
+					style={{ cursor: "pointer" }}
+				/>
+			</span>
+			<Button
+				variant="light"
+				onClick={() =>
+					productDispatch({
+						type: "CLEAR_FILTER",
+					})
+				}
+			>
+				Clear Filters
+			</Button>
+		</div>
+	);
+};
+
+export default Filters;
